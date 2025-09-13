@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Gomoku</title>
+  <title>Gomoku</title>a 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
@@ -59,16 +59,19 @@
       margin: auto;
       margin-top: 10%;
       border-radius: 50%;
-      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
+      xxxbox-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
                   inset 2px 2px 4px rgba(255,255,255,0.6);
     }
 
     .cell.x::after {
       background: radial-gradient(circle at 10px 10px, #fff, #ccc);
+    box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
+      inset 2px 2px 4px rgb(255,255,255,0.6);
     }
 
     .cell.o::after {
       background: radial-gradient(circle at 10px 10px, #333, #000);
+    
     }
 
     .cell.winner {
