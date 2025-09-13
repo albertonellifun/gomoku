@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Gomoku</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    #game-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      padding: 10px;
+      gap: 10px;
+      transition: all 0.5s ease-in-out;
+    }
+
+    #board-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #board {
+      display: grid;
+      width: 100%;
+      height: 100%;
+      grid-template-columns: repeat(15, 1fr);
+      grid-template-rows: repeat(15, 1fr);
+      gap: 1px;
+    }
+
+    .cell {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .cell::after {
+      content: "";
+      display: block;
+      width: 80%;
+      height: 80%;
+      margin: auto;
+      margin-top: 10%;
+      border-radius: 50%;
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
+                  inset 2px 2px 4px rgba(255,255,255,0.6);
+    }
+
+    .cell.x::after {
+      background: radial-gradient(circle at 10px 10px, #fff, #ccc);
+    }
+
+    .cell.o::after {
+      background: radial-gradient(circle at 10px 10px, #333, #000);
+    }
+
+    .cell.winner {
+      animation: flash 0.6s infinite;
+      border: 2px solid gold;
+    }
+
+    @keyframes flash {
+      0%, 100% { background-color: gold; }
+      50% { background-color: #fff8dc; }
+    }
+
+    #sidebar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.5s ease-in-out;
+    }
+
+    #status, #timer {
+      font-size: 1.2em;
+      margin: 5px;
+      text-align: center;
+    }
+
+    #restart {
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(to bottom, #4e9af1, #1e62d0);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px #144a9e;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    #restart:active {
+      box-shadow: 0 2px #144a9e;
+      transform: translateY(2px);
+    }
+
+    #restart:hover {
+      background: linear-gradient(to bottom, #5aaeff, #2a74e0);
+    }
+
+    @media (min-width: 768px), (orientation: landscape) {
+      #game-wrapper {
+        flex-direction: row;
+      }
+
+      #board-container {
+        flex: 3;
+      }
+
+      #sidebar {
+        flex: 1;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-left: 20px;
+      }
+    }
+
+    @media (max-width: 767px) and (orientation: portrait) {
+      #game-wrapper {
+        flex-direction: column;
+      }
+
+      #sidebar {
+        align-items: center;
+        justify-content: center;
+        padding-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="board-container">
+      <div id="board"></div>
+    </div>
+    <div id="sidebar">
+      <p id="status">Turno: X</p>
+      <p id="timer">Tempo rimasto: 30s</p>
+      <button id="restart">Nuova partita</button>
+    </div>
+  </div>
+
+  <script>
+    const board = document.getElementById("board");
+    const status = document.getElementById("status");
+    const timerDisplay = document.getElementById("timer");
+    const restartBtn = document.getElementById("restart");
+
+    let currentPlayer = "X";
+    const size = 15;
+    let grid = Array(size).fill().map(() => Array(size).fill(""));
+    let gameOver = false;
+    let timer;
+    let timeLeft = 30;
+
+    function createBoard() {
+      board.innerHTML = "";
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.dataset.row = row;
+          cell.dataset.col = col;
+          cell.addEventListener("click", handleClick);
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function handleClick(e) {
+      if (gameOver) return;
+
+      const row = parseInt(e.target.dataset.row);
+      const col = parseInt(e.target.dataset.col);
+
+      if (grid[row][col] !== "") return;
+
+      grid[row][col] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      e.target.classList.add(currentPlayer.toLowerCase());
+
+      const winningCells = checkWin(row, col);
+      if (winningCells) {
+        status.textContent = `Giocatore ${currentPlayer} ha vinto!`;
+        highlightWinner(winningCells);
+        gameOver = true;
+        clearInterval(timer);
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      status.textContent = `Turno: ${currentPlayer}`;
+      startTimer();
+    }
+
+    function checkWin(row, col) {
+      const directions = [
+        [0, 1], [1, 0], [1, 1], [1, -1]
+      ];
+
+      for (let [dx, dy] of directions) {
+        let line = [[row, col]];
+        line.push(...collect(row, col, dx, dy));
+        line.push(...collect(row, col, -dx, -dy));
+        if (line.length >= 5) return line;
+      }
+      return null;
+    }
+
+    function collect(row, col, dx, dy) {
+      let cells = [];
+      let r = row + dx;
+      let c = col + dy;
+      while (r >= 0 && r < size && c >= 0 && c < size && grid[r][c] === currentPlayer) {
+        cells.push([r, c]);
+        r += dx;
+        c += dy;
+      }
+      return cells;
+    }
+
+    function highlightWinner(cells) {
+      cells.forEach(([r, c]) => {
+        const cell = board.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+        if (cell) cell.classList.add("winner");
+      });
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = 30;
+      updateTimerDisplay();
+
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          switchTurnDueToTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = `Tempo rimasto: ${timeLeft}s`;
+    }
+
+    function switchTurnDueToTimeout() {
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      status.textContent = `Tempo scaduto! Turno: ${currentPlayer}`;
+      startTimer();
+    }
+
+    restartBtn.addEventListener("click", () => {
+      grid = Array(size).fill().map(() => Array(size).fill(""));
+      currentPlayer = "X";
+      gameOver = false;
+      status.textContent = "Turno: X";
+      createBoard();
+      startTimer();
+    });
+
+    createBoard();
+    startTimer();
+  </script>
+</body>
+</html>
