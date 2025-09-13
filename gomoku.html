@@ -11,7 +11,7 @@
       height: 100%;
       font-family: sans-serif;
       background-color: #744;
-      color: #fff;
+      color: #000;
     }
 
     #game-wrapper {
@@ -39,7 +39,7 @@
       grid-template-columns: repeat(15, 1fr);
       grid-template-rows: repeat(15, 1fr);
       gap: 0;
-      background: linear-gradient(135deg, #fec, #eca);
+      background: linear-gradient(135deg, #fec, #ec9);
       box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
       border: 4px solid #522;
       border-radius: 8px;
@@ -119,10 +119,10 @@
       font-size: 18px;
       font-weight: bold;
       color: #fff;
-      background: linear-gradient(to bottom, #56f, #26d);
+      background: linear-gradient(to bottom, #ec9, #744);
       border: none;
       border-radius: 12px;
-      box-shadow: 0 4px #25a;
+      box-shadow: 0 4px #522;
       cursor: pointer;
       transition: all 0.2s ease;
       text-transform: uppercase;
@@ -130,12 +130,12 @@
     }
 
     #restart:active {
-      box-shadow: 0 2px #25a;
+      box-shadow: 0 2px #522;
       transform: translateY(2px);
     }
 
     #restart:hover {
-      background: linear-gradient(to bottom, #6bf, #37e);
+      background: linear-gradient(to bottom, #ec9, #744);
     }
 
     @media (min-width: 768px), (orientation: landscape) {
