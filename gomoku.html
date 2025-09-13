@@ -194,7 +194,7 @@
       if (grid[row][col] !== "") return;
 
       grid[row][col] = currentPlayer;
-      e.target.textContent = currentPlayer;
+      //e.target.textContent = currentPlayer;
       e.target.classList.add(currentPlayer.toLowerCase());
 
       const winningCells = checkWin(row, col);
