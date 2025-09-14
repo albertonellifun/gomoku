@@ -122,7 +122,7 @@
       width: 25px;
       height: 25px;
       position: relative;
-      top: 8px;
+      top: 6px;
     }
 
     #restart {
@@ -185,7 +185,7 @@
       <div id="board"></div>
     </div>
     <div id="sidebar">
-      <p id="status">Turno: <span class="cell x"></span></p>
+      <p id="status">Turno <span class="cell x"></span></p>
       <p id="timer">Tempo rimasto: 30s</p>
       <button id="restart">Nuova partita</button>
     </div>
@@ -197,7 +197,7 @@
     const timerDisplay = document.getElementById("timer");
     const restartBtn = document.getElementById("restart");
 
-    let currentPlayer = "X";
+    let currentPlayer = "x";
     const size = 15;
     let grid = Array(size).fill().map(() => Array(size).fill(""));
     let gameOver = false;
@@ -228,19 +228,19 @@
 
       grid[row][col] = currentPlayer;
       //e.target.textContent = currentPlayer;
-      e.target.classList.add(currentPlayer.toLowerCase());
+      e.target.classList.add(currentPlayer);
 
       const winningCells = checkWin(row, col);
       if (winningCells) {
-        status.innerHTML = `Giocatore ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span> ha vinto!`;
+        status.innerHTML = `Giocatore <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span> ha vinto!`;
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
         return;
       }
 
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
+      currentPlayer = currentPlayer === "x" ? "o" : "x";
+      status.innerHTML = `Turno <span class="cell ${currentPlayer} alt="${currentPlayer}""></span>`;
       startTimer();
     }
 
@@ -297,16 +297,16 @@
     }
 
     function switchTurnDueToTimeout() {
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.innerHTML = `Tempo scaduto! Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
+      currentPlayer = currentPlayer === "x" ? "o" : "x";
+      status.innerHTML = `Tempo scaduto! Turno <span class="cell ${currentPlayer} alt="${currentPlayer}""></span>`;
       startTimer();
     }
 
     restartBtn.addEventListener("click", () => {
       grid = Array(size).fill().map(() => Array(size).fill(""));
-      currentPlayer = "X";
+      currentPlayer = "x";
       gameOver = false;
-      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
+      status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       createBoard();
       startTimer();
     });
