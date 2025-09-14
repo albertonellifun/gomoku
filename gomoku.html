@@ -232,7 +232,7 @@
 
       const winningCells = checkWin(row, col);
       if (winningCells) {
-        status.innerHTML = `Giocatore ${currentPlayer} <span class="cell ${currentPlayer}"></span> ha vinto!`;
+        status.innerHTML = `Giocatore ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span> ha vinto!`;
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
@@ -240,7 +240,7 @@
       }
 
       currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer}"></span>`;
+      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
       startTimer();
     }
 
@@ -298,7 +298,7 @@
 
     function switchTurnDueToTimeout() {
       currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.innerHTML = `Tempo scaduto! Turno: ${currentPlayer} <span class="cell ${currentPlayer}"></span>`;
+      status.innerHTML = `Tempo scaduto! Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
       startTimer();
     }
 
@@ -306,7 +306,7 @@
       grid = Array(size).fill().map(() => Array(size).fill(""));
       currentPlayer = "X";
       gameOver = false;
-      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer}"></span>`;
+      status.innerHTML = `Turno: ${currentPlayer} <span class="cell ${currentPlayer.toLowerCase()}"></span>`;
       createBoard();
       startTimer();
     });
