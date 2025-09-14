@@ -185,7 +185,7 @@
       <div id="board"></div>
     </div>
     <div id="sidebar">
-      <p id="status">Turno: X<span class="cell"></span></p>
+      <p id="status">Turno: <span class="cell"></span></p>
       <p id="timer">Tempo rimasto: 30s</p>
       <button id="restart">Nuova partita</button>
     </div>
@@ -232,7 +232,7 @@
 
       const winningCells = checkWin(row, col);
       if (winningCells) {
-        status.textContent = `Giocatore ${currentPlayer} ha vinto!`;
+        status.innerHTML = `Giocatore ${currentPlayer} <span class="cell {currentPlayer}"></span> ha vinto!`;
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
@@ -240,7 +240,7 @@
       }
 
       currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.textContent = `Turno: ${currentPlayer}`;
+      status.innerHTML = `Turno: ${currentPlayer} <span class="cell {currentPlayer}"></span>`;
       startTimer();
     }
 
@@ -298,7 +298,7 @@
 
     function switchTurnDueToTimeout() {
       currentPlayer = currentPlayer === "X" ? "O" : "X";
-      status.textContent = `Tempo scaduto! Turno: ${currentPlayer}`;
+      status.innerHTML = `Tempo scaduto! Turno: ${currentPlayer} <span class="cell {currentPlayer}"></span>`;
       startTimer();
     }
 
@@ -306,7 +306,7 @@
       grid = Array(size).fill().map(() => Array(size).fill(""));
       currentPlayer = "X";
       gameOver = false;
-      status.textContent = "Turno: X";
+      status.innerHTML = `Turno: ${currentPlayer} <span class="cell {currentPlayer}"></span>`;
       createBoard();
       startTimer();
     });
