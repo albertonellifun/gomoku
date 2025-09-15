@@ -124,6 +124,7 @@
       position: relative;
       top: 6px;
       padding: 0 4px;
+	  background-image: none;
     }
 
     #restart, #mute {
@@ -235,7 +236,8 @@
   		  });
   		}
   	}
-    
+
+	//creazione board
     function createBoard() {
       board.innerHTML = "";
       for (let row = 0; row < size; row++) {
@@ -272,7 +274,7 @@
       }
 
       currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Turno <span class="cell ${currentPlayer} alt="${currentPlayer}"></span>`;
+      status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       startTimer();
     }
 
@@ -330,7 +332,7 @@
 
     function switchTurnDueToTimeout() {
       currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Tempo scaduto! Turno <span class="cell ${currentPlayer} alt="${currentPlayer}"></span>`;
+      status.innerHTML = `Tempo scaduto! Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       startTimer();
     }
 
