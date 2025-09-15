@@ -136,20 +136,19 @@
     }
 
 	.cell.cross::before {
-	  content: "";
-	  position: absolute;
-	  top: 50%;
+	  width: 2px;
+	  height: 60%;
 	  left: 50%;
-	  width: 1px;
-	  height: 1px;
-	  background: transparent;
-	  box-shadow:
-	    -10px 0 0 #522,  /* linea a sinistra */
-	    10px 0 0 #522,   /* linea a destra */
-	    0 -10px 0 #522,  /* linea sopra */
-	    0 10px 0 #522;   /* linea sotto */
-	  transform: translate(-50%, -50%);
-	  pointer-events: none;
+	  top: 20%;
+	  transform: translateX(-50%);
+	}
+
+	.cell::after {
+	  height: 2px;
+	  width: 60%;
+	  top: 50%;
+	  left: 20%;
+	  transform: translateY(-50%);
 	}
 
     #sidebar {
