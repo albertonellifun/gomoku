@@ -210,7 +210,7 @@
     let timeLeft = 30;
 
     //music management
-    let isMute = false;
+    let isMute = true;
 	const muteBtn = document.getElementById("mute");
 	muteBtn.addEventListener("click", () => {
 	  	isMute = !isMute; 
@@ -225,7 +225,7 @@
   		}
   	}
 	
-  	function startMusic(fromBeginning = true) {
+  	function startMusic() {
   		if (isMute) return;
   		const music = document.getElementById("bgMusic");
   		if (music) {
@@ -239,7 +239,6 @@
   	}
     
     function createBoard() {
-      startMusic();
       board.innerHTML = "";
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
@@ -344,6 +343,7 @@
       status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       createBoard();
       startTimer();
+	  startMusic();
     });
 
     createBoard();
