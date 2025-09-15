@@ -230,11 +230,9 @@
   		const music = document.getElementById("bgMusic");
   		if (music) {
   		  music.volume = 0.5;
-  		  if (fromBeginning) music.currentTime = 0;
   		  music.play().catch((e) => {
   			console.warn("🔇 bgMusic bloccata:", e);
   		  });
-  		  musicStarted = true;
   		}
   	}
     
