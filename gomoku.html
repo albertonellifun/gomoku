@@ -121,32 +121,24 @@
     }
 
     .cell.winner {
-      animation: flash 0.6s infinite;
-      border: 2px solid gold;
+      /*animation: flash 0.6s infinite;
+      border: 2px solid gold;*/
+      box-shadow: 0 0 4px 8px rgba(255, 220, 100, 0.6);
+      animation: glowPulse 1.2s infinite ease-in-out;
+      box-sizing: border-box;
     }
 
     .cell.last-move::after {
        border: 2px solid gold;
-       box-shadow: 0 0 8px 4px rgba(255, 220, 100, 0.6);
+       box-shadow: 0 0 4px 8px rgba(255, 220, 100, 0.6);
        animation: glowPulse 1.2s infinite ease-in-out;
        box-sizing: border-box;
     }
 
 	@keyframes glowPulse {
   	  0% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 0 12px 4px rgba(255, 220, 100, 0.6); transform: scale(1.05); }
+      50% { box-shadow: 0 0 12px 8px rgba(255, 220, 100, 0.6); transform: scale(1.05); }
       100% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
-    }
-
-	@keyframes pulse {
-	  0%   { border-color: gold; }
-	  50%  { border-color: #fec; }
-	  100% { border-color: gold; }
-	}
-
-    @keyframes flash {
-      0%, 100% { background-color: gold; }
-      50% { background-color: #fec; }
     }
 
     #sidebar {
@@ -309,22 +301,22 @@
 
       grid[row][col] = currentPlayer;
 	  
-	  //rimuove la classe 'last-move' dalla mossa precedente
-	  const previous = board.querySelector(".last-move");
-	  if (previous) previous.classList.remove("last-move");
+	  const winningCells = checkWin(row, col);
 		
-      //e.target.textContent = currentPlayer;
-      e.target.classList.add(currentPlayer);
-	  e.target.classList.add("last-move");
-
-      const winningCells = checkWin(row, col);
       if (winningCells) {
         status.innerHTML = `Ha vinto <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
         return;
-      }
+      } else {
+		//rimuove la classe 'last-move' dalla mossa precedente
+		const previous = board.querySelector(".last-move");
+	    if (previous) previous.classList.remove("last-move");
+	    //e.target.textContent = currentPlayer;
+	    e.target.classList.add(currentPlayer);
+		e.target.classList.add("last-move");
+	  }
 
       currentPlayer = currentPlayer === "x" ? "o" : "x";
       status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
