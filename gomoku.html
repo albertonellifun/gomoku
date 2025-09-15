@@ -137,7 +137,7 @@
 
 	@keyframes glowPulse {
   	  0% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 0 12px 8px rgba(255, 220, 100, 0.6); transform: scale(1.05); }
+      50% { box-shadow: 0 0 8px 4px rgba(255, 220, 100, 0.6); transform: scale(1.05); }
       100% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
     }
 
@@ -302,6 +302,12 @@
       grid[row][col] = currentPlayer;
 	  
 	  const winningCells = checkWin(row, col);
+
+	  //rimuove la classe 'last-move' dalla mossa precedente
+	  const previous = board.querySelector(".last-move");
+	  if (previous) previous.classList.remove("last-move");
+	  //e.target.textContent = currentPlayer;
+	  e.target.classList.add(currentPlayer);
 		
       if (winningCells) {
         status.innerHTML = `Ha vinto <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
@@ -309,16 +315,10 @@
         gameOver = true;
         clearInterval(timer);
         return;
-      } else {
-		//rimuove la classe 'last-move' dalla mossa precedente
-		const previous = board.querySelector(".last-move");
-	    if (previous) previous.classList.remove("last-move");
-	    //e.target.textContent = currentPlayer;
-	    e.target.classList.add(currentPlayer);
-		e.target.classList.add("last-move");
-	  }
-
-      currentPlayer = currentPlayer === "x" ? "o" : "x";
+      }
+	  
+	  e.target.classList.add("last-move");
+	  currentPlayer = currentPlayer === "x" ? "o" : "x";
       status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       startTimer();
     }
