@@ -52,21 +52,19 @@
       background-color: transparent;
       /* BORDO ESTERNO ALLA CELLA */
       /* border: 1px solid rgba(80, 50, 20, 0.3); */
-      /* BORDO INTERNO / AD X */
+      /* BORDO INTERNO / AD X come linear gradient vert+orizz */
       background-image:
-		/* verticale */
         linear-gradient(to right, 
-          transparent calc(50% - 0.51px), 
-          #522 calc(50% - 0.51px), 
-          #522 calc(50% + 0.51px), 
-          transparent calc(50% + 0.51px)
+          transparent calc(50% - 1px), 
+          #522 calc(50% - 1px), 
+          #522 calc(50% + 1px), 
+          transparent calc(50% + 1px)
         ),
-		/* orizzontale */
         linear-gradient(to bottom, 
-          transparent calc(50% - 0.51px), 
-          #522 calc(50% - 0.51px), 
-          #522 calc(50% + 0.51px), 
-          transparent calc(50% + 0.51px)
+          transparent calc(50% - 1px), 
+          #522 calc(50% - 1px), 
+          #522 calc(50% + 1px), 
+          transparent calc(50% + 1px)
         );
       position: relative;
       touch-action: manipulation;
