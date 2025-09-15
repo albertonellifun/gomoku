@@ -189,8 +189,12 @@
       <p id="status">Turno <span class="cell x"></span></p>
       <p id="timer">Tempo rimasto: 30s</p>
       <button id="restart">Nuova partita</button>
+      <button id="mute">Musica</button>
     </div>
   </div>
+  <audio id="bgMusic" loop preload="auto">
+	  <source src="./res/please-calm-my-mind.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     const board = document.getElementById("board");
@@ -205,7 +209,32 @@
     let timer;
     let timeLeft = 30;
 
+    //music management
+    let isMute = false;
+    document.getElementById("mute").onclick(function() { isMute = !isMute; if(isMute) stopMusic(); else startMusic(); });
+    
+    function stopMusic() {
+  		const music = document.getElementById("bgMusic");
+  		if (music) {
+  			music.pause();
+  		}
+  	}
+	
+  	function startMusic(fromBeginning = true) {
+  		if (isMute) return;
+  		const music = document.getElementById("bgMusic");
+  		if (music) {
+  		  music.volume = 0.5;
+  		  if (fromBeginning) music.currentTime = 0;
+  		  music.play().catch((e) => {
+  			console.warn("🔇 bgMusic bloccata:", e);
+  		  });
+  		  musicStarted = true;
+  		}
+  	}
+    
     function createBoard() {
+      startMusic();
       board.innerHTML = "";
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
