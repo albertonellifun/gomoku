@@ -222,8 +222,8 @@
       <div id="board"></div>
     </div>
     <div id="sidebar">
-      <p id="status">Turno <span class="cell x"></span></p>
-      <p id="timer">Tempo rimasto: 30s</p>
+      <p id="status">Turno: <span class="cell x"></span></p>
+      <p id="timer">Tempo: 30s</p>
       <button id="restart">Nuova partita</button>
       <button id="mute">Musica</button>
     </div>
@@ -306,7 +306,7 @@
 	  e.target.classList.add(currentPlayer);
 		
       if (winningCells) {
-        status.innerHTML = `Ha vinto <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+        status.innerHTML = `Vince: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
@@ -315,7 +315,7 @@
 	  
 	  e.target.classList.add("last-move");
 	  currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      status.innerHTML = `Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       startTimer();
     }
 
@@ -368,12 +368,12 @@
     }
 
     function updateTimerDisplay() {
-      timerDisplay.textContent = `Tempo rimasto: ${timeLeft}s`;
+      timerDisplay.textContent = `Tempo: ${timeLeft}s`;
     }
 
     function switchTurnDueToTimeout() {
       currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Tempo scaduto!<br/>Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      status.innerHTML = `Tempo scaduto!<br/>Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       startTimer();
     }
 
@@ -381,7 +381,7 @@
       grid = Array(size).fill().map(() => Array(size).fill(""));
       currentPlayer = "x";
       gameOver = false;
-      status.innerHTML = `Turno <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      status.innerHTML = `Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
       createBoard();
       startTimer();
 	  startMusic();
