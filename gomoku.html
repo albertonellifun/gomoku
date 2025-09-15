@@ -125,6 +125,18 @@
       border: 2px solid gold;
     }
 
+    .cell.last-move::after {
+      border: 2px solid gold;
+      animation: pulse 1s infinite;
+      box-sizing: border-box;
+    }
+
+	@keyframes pulse {
+	  0%   { border-color: gold; }
+	  50%  { border-color: #fec; }
+	  100% { border-color: gold; }
+	}
+
     @keyframes flash {
       0%, 100% { background-color: gold; }
       50% { background-color: #fec; }
@@ -289,8 +301,14 @@
       if (grid[row][col] !== "") return;
 
       grid[row][col] = currentPlayer;
+	  
+	  //rimuove la classe 'last-move' dalla mossa precedente
+	  const previous = board.querySelector(".last-move");
+	  if (previous) previous.classList.remove("last-move");
+		
       //e.target.textContent = currentPlayer;
       e.target.classList.add(currentPlayer);
+	  e.target.classList.add("last-move");
 
       const winningCells = checkWin(row, col);
       if (winningCells) {
