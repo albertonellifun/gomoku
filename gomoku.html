@@ -211,7 +211,12 @@
 
     //music management
     let isMute = false;
-    document.getElementById("mute").onclick(function() { isMute = !isMute; if(isMute) stopMusic(); else startMusic(); });
+	const muteBtn = document.getElementById("mute");
+	muteBtn.addEventListener("click", () => {
+	  	isMute = !isMute; 
+		if(isMute) stopMusic(); 
+		else startMusic(); 
+	});
     
     function stopMusic() {
   		const music = document.getElementById("bgMusic");
