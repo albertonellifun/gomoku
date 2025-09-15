@@ -111,24 +111,16 @@
     .cell.x::after {
       background: radial-gradient(circle at 10px 10px, #fff, #ccc);
       box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
-        inset 2px 2px 4px rgb(255,255,255,0.6);
+        inset 2px 2px 4px rgb(255,255,255,0.6) !important;
     }
 
     .cell.o::after {
       background: radial-gradient(circle at 10px 10px, #333, #000);
       box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
-        inset 2px 2px 4px rgb(255,255,255,0.6);
+        inset 2px 2px 4px rgb(255,255,255,0.6) !important;
     }
 
-    .cell.winner {
-      /*animation: flash 0.6s infinite;
-      border: 2px solid gold;*/
-      box-shadow: 0 0 4px 8px rgba(255, 220, 100, 0.6);
-      animation: glowPulse 1.2s infinite ease-in-out;
-      box-sizing: border-box;
-    }
-
-    .cell.last-move::after {
+    .cell.winner::after, .cell.last-move::after {
        border: 2px solid gold;
        box-shadow: 0 0 4px 8px rgba(255, 220, 100, 0.6);
        animation: glowPulse 1.2s infinite ease-in-out;
@@ -137,7 +129,7 @@
 
 	@keyframes glowPulse {
   	  0% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
-      50% { box-shadow: 0 0 8px 4px rgba(255, 220, 100, 0.6); transform: scale(1.05); }
+      50% { box-shadow: 0 0 8px 4px rgba(255, 220, 100, 0.6); transform: scale(1.03); }
       100% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
     }
 
