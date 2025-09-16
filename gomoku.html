@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Gomoku</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
   <style>
     html, body {
       margin: 0;
@@ -49,10 +50,9 @@
     }
 
     .cell {
+      position: relative;
+      touch-action: manipulation;
       background-color: transparent;
-      /* BORDO ESTERNO ALLA CELLA */
-      /* border: 1px solid rgba(80, 50, 20, 0.3); */
-      /* BORDO INTERNO / AD X come linear gradient vert+orizz */
       background-image:
         linear-gradient(to right, 
           transparent calc(50% - 2px), 
@@ -66,16 +66,42 @@
           #522 calc(50% + 2px), 
           transparent calc(50% + 2px)
         );
-      position: relative;
-      touch-action: manipulation;
     }
-    .cell[data-row="7"][data-col="7"]::before,
-	.cell[data-row="3"][data-col="3"]::before,
-	.cell[data-row="3"][data-col="11"]::before,
-	.cell[data-row="11"][data-col="3"]::before,
-	.cell[data-row="11"][data-col="11"]::before {
-	  content: "";
-	  position: absolute;
+
+    /* pietre (X/O) */
+    .stone {
+      width: 96%;
+      height: 96%;
+      margin: 2%;
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+
+    .cell.x .stone {
+	  border: 1px solid #999;
+      background: radial-gradient(circle at 10px 10px, #fff, #ccc);
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
+                  inset 2px 2px 4px rgba(255,255,255,0.6) !important;
+    }
+
+    .cell.o .stone {
+	  border: 1px solid #999;
+      background: radial-gradient(circle at 10px 10px, #333, #000);
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
+                  inset 2px 2px 4px rgba(255,255,255,0.6) !important;
+    }
+
+    /* highlight mosse vincenti */
+    .cell.winner .stone,
+    .cell.last-move .stone {
+      border: 2px solid gold;
+      box-shadow: 0 0 4px 8px rgba(255,220,100,0.6);
+      animation: glowPulse 1.2s infinite ease-in-out;
+    }
+
+    /* stelle (hoshi) */
+    .star {
+      position: absolute;
       top: 50%;
       left: 50%;
       width: 8px;
@@ -84,57 +110,19 @@
       border-radius: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      z-index: 1;
-	  box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
-        inset 2px 2px 4px rgb(255,233,200,0.6);
-    }
-	.cell.x[data-row="7"][data-col="7"]::before, .cell.o[data-row="7"][data-col="7"]::before,
-	.cell.x[data-row="3"][data-col="3"]::before, .cell.o[data-row="3"][data-col="3"]::before,
-	.cell.x[data-row="3"][data-col="11"]::before, .cell.o[data-row="3"][data-col="11"]::before,
-	.cell.x[data-row="11"][data-col="3"]::before, .cell.o[data-row="11"][data-col="3"]::before,
-	.cell.x[data-row="11"][data-col="11"]::before, .cell.o[data-row="11"][data-col="11"]::before {
-  		display: none;
-	}
-	
-    .cell::after {
-      content: "";
-      display: block;
-      width: 96%;
-      height: 96%;
-      margin: auto;
-      margin-top: 2%;
-      border-radius: 50%;
+      box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2),
+                  inset 2px 2px 4px rgba(255,233,200,0.6);
     }
 
-    .cell.x::after {
-      background: radial-gradient(circle at 10px 10px, #fff, #ccc);
-      box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
-        inset 2px 2px 4px rgb(255,255,255,0.6) !important;
-	  border: 1px solid #999;
-      box-sizing: border-box;
+    .cell.x .star, .cell.o .star {
+      display: none;
     }
 
-    .cell.o::after {
-      background: radial-gradient(circle at 10px 10px, #333, #000);
-      box-shadow: inset -2px -2px 4px rgb(0,0,0,0.2),
-        inset 2px 2px 4px rgb(255,255,255,0.6) !important;
-	  border: 1px solid #999;
-      box-sizing: border-box;
-    }
-
-    .cell.winner::after, .cell.last-move::after {
-       border: 2px solid gold;
-       box-shadow: 0 0 4px 8px rgba(255, 220, 100, 0.6);
-       animation: glowPulse 1.2s infinite ease-in-out;
-       box-sizing: border-box;
-    }
-
-	@keyframes glowPulse {
-  	  0% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
       50% { box-shadow: 0 0 8px 4px rgba(255, 220, 100, 0.6); transform: scale(1.03); }
       100% { box-shadow: 0 0 4px 2px rgba(255, 220, 100, 0.3); transform: scale(1); }
     }
-
 
     #sidebar {
       display: flex;
@@ -158,7 +146,13 @@
       position: relative;
       top: 8px;
       padding: 0 4px;
-	  background-image: none;
+      background-image: none;
+    }
+
+    #status .stone {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
 
     #restart, #mute {
@@ -221,14 +215,14 @@
       <div id="board"></div>
     </div>
     <div id="sidebar">
-      <p id="status">Turno: <span class="cell x"></span></p>
-      <p id="timer">Tempo: 30s</p>
+      <p id="status"></p>
+      <p id="timer"></p>
       <button id="restart">Nuova partita</button>
       <button id="mute">Musica</button>
     </div>
   </div>
   <audio id="bgMusic" loop preload="auto">
-	  <source src="./res/please-calm-my-mind.mp3" type="audio/mpeg">
+    <source src="./res/please-calm-my-mind.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -246,32 +240,32 @@
 
     //music management
     let isMute = true;
-	const muteBtn = document.getElementById("mute");
-	muteBtn.addEventListener("click", () => {
-	  	isMute = !isMute; 
-		if(isMute) stopMusic(); 
-		else startMusic(); 
-	});
+    const muteBtn = document.getElementById("mute");
+    muteBtn.addEventListener("click", () => {
+      isMute = !isMute; 
+      if(isMute) stopMusic(); 
+      else startMusic(); 
+    });
     
     function stopMusic() {
-  		const music = document.getElementById("bgMusic");
-  		if (music) {
-  			music.pause();
-  		}
-  	}
-	
-  	function startMusic() {
-  		if (isMute) return;
-  		const music = document.getElementById("bgMusic");
-  		if (music) {
-  		  music.volume = 0.5;
-  		  music.play().catch((e) => {
-  			console.warn("🔇 bgMusic bloccata:", e);
-  		  });
-  		}
-  	}
+      const music = document.getElementById("bgMusic");
+      if (music) {
+        music.pause();
+      }
+    }
+    
+    function startMusic() {
+      if (isMute) return;
+      const music = document.getElementById("bgMusic");
+      if (music) {
+        music.volume = 0.5;
+        music.play().catch((e) => {
+          console.warn("🔇 bgMusic bloccata:", e);
+        });
+      }
+    }
 
-	//creazione board
+    //creazione board
     function createBoard() {
       board.innerHTML = "";
       for (let row = 0; row < size; row++) {
@@ -280,6 +274,25 @@
           cell.classList.add("cell");
           cell.dataset.row = row;
           cell.dataset.col = col;
+
+          // contenitore pietra
+          const stone = document.createElement("div");
+          stone.classList.add("stone");
+          cell.appendChild(stone);
+
+          // hoshi (stelle)
+          if (
+            (row === 7 && col === 7) ||
+            (row === 3 && col === 3) ||
+            (row === 3 && col === 11) ||
+            (row === 11 && col === 3) ||
+            (row === 11 && col === 11)
+          ) {
+            const star = document.createElement("div");
+            star.classList.add("star");
+            cell.appendChild(star);
+          }
+
           cell.addEventListener("click", handleClick);
           board.appendChild(cell);
         }
@@ -289,32 +302,33 @@
     function handleClick(e) {
       if (gameOver) return;
 
-      const row = parseInt(e.target.dataset.row);
-      const col = parseInt(e.target.dataset.col);
+      const cell = e.currentTarget;
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
 
       if (grid[row][col] !== "") return;
 
       grid[row][col] = currentPlayer;
-	  
-	  const winningCells = checkWin(row, col);
+      
+      const winningCells = checkWin(row, col);
 
-	  //rimuove la classe 'last-move' dalla mossa precedente
-	  const previous = board.querySelector(".last-move");
-	  if (previous) previous.classList.remove("last-move");
-	  //e.target.textContent = currentPlayer;
-	  e.target.classList.add(currentPlayer);
-		
+      // rimuove last-move precedente
+      const previous = board.querySelector(".last-move");
+      if (previous) previous.classList.remove("last-move");
+
+      cell.classList.add(currentPlayer);
+
       if (winningCells) {
-        status.innerHTML = `Vince: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+        updateStatus(true, false);
         highlightWinner(winningCells);
         gameOver = true;
         clearInterval(timer);
         return;
       }
-	  
-	  e.target.classList.add("last-move");
-	  currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      
+      cell.classList.add("last-move");
+      currentPlayer = currentPlayer === "x" ? "o" : "x";
+      updateStatus()
       startTimer();
     }
 
@@ -372,22 +386,34 @@
 
     function switchTurnDueToTimeout() {
       currentPlayer = currentPlayer === "x" ? "o" : "x";
-      status.innerHTML = `Tempo scaduto!<br/>Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      updateStatus(false, true);
       startTimer();
     }
+	
+	function updateStatus(win = false, timeout = false) {
+		if (win) {
+			return;
+		} else if (timeout) {
+			status.innerHTML = `Tempo scaduto!<br/>Turno: <span class="cell ${currentPlayer}"><div class="stone"></div></span>`;
+		} else {
+			status.innerHTML = `Turno: <span class="cell ${currentPlayer}"><div class="stone"></div></span>`;
+		}
+	}
 
     restartBtn.addEventListener("click", () => {
       grid = Array(size).fill().map(() => Array(size).fill(""));
       currentPlayer = "x";
       gameOver = false;
-      status.innerHTML = `Turno: <span class="cell ${currentPlayer}" alt="${currentPlayer}"></span>`;
+      updateStatus();
       createBoard();
       startTimer();
-	  startMusic();
+      startMusic();
     });
 
     createBoard();
-    startTimer();
+	startTimer();
+	updateTimerDisplay();
+	updateStatus();
   </script>
 </body>
 </html>
