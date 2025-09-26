@@ -1,5 +1,6 @@
 # gomoku
 Gomoku game in HTML CSS and JavaScript Legacy 
+[link](https://albertonellifun.github.io/gomoku/gomoku.html)
 
 ## Licenza
 
